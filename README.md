@@ -1,6 +1,8 @@
 
 # SIM Binding Flow Documentation
 
+**Prepared By:** [Gowtham Sooryaraj](https://github.com/sooryaraj/) 
+
 ## **1. Initialization API**
 
 -   **Endpoint**: `simBinding/init`
