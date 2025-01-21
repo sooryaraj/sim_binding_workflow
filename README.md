@@ -7,7 +7,7 @@
 
 -   **Endpoint**: `simBinding/init`
 -   **Action**:
-    -   The app sends the `encrypted_device_id` to the server.
+    -   The app sends the `encrypted_device_data` to the server.
     -   The server stores the data with the status `PENDING` and generates a `ref_number`.
 
 ### Request Example:
@@ -34,30 +34,22 @@
 ## **2. Send SMS (Pre-Filled Message)**
 
 -   **Action**:
-    -   Use the default SMS app to send the `sms_body` to the `sms_number`.
+    -   Use the default SMS app to send the `sms_body` to the `sms_number`. (or)
+    -   Use SEND_SMS permission to send sms from background.
 
+### Encrypted Hash Example:
+```
+// Android
+uniqueDetails = "${phoneNumber} ${countryCode} ${carrierName} ${deviceID}";
+// iOS
+uniqueDetails = deviceID; // iOS does'nt provide SIM details we can't use. 
+```
 ### SMS Content Example:
 
 ```
-SAAFE STAGE-VERIFY h/ZIpg2redwTXpBP8EOb++hQMK3FizB+dPE0jTfnqfrO+LC+wp0wc0qy2oTW4AOj
-
+SAAFE VERIFY h/ZIpg2redwTXpBP8EOb++hQMK3FizB+dPE0jTfnqfrO+LC+wp0wc0qy2oTW4AOj
 ```
 
-### Flutter Implementation:
-
-```dart
-void sendSMS(String number, String body) async {
-  final uri = Uri(
-    scheme: 'sms',
-    path: number,
-    queryParameters: {"body": body},
-  );
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri);
-  }
-}
-
-```
 
 ----------
 
@@ -66,9 +58,9 @@ void sendSMS(String number, String body) async {
 -   **Action**:
     -   The server receives the SMS sent to the long number.
     -   The server processes the SMS by:
-        -   Extracting the  `encrypted_device_id` from the SMS body.
+        -   Extracting the  `encrypted_device_data` from the SMS body.
         -   Matching these values against the database records.
-        -   If valid, updating the status of the record to `completed` or `success`.
+        -   If valid, updating the status of the record to `completed`.
 
 ----------
 
@@ -76,9 +68,9 @@ void sendSMS(String number, String body) async {
 
 -   **Endpoint**: `simBinding/verify`
 -   **Action**:
-    -   The app waits **5 seconds** after sending the SMS and then hits the verify API.
+    -   The app waits **5 to 10 seconds** after sending the SMS and then hits the verify API.
     -   The app sends the `ref_number` to verify the binding status.
-    -   The server checks if the `encrypted_device_id` and `ref_number` are validated.
+    -   The server checks if the `encrypted_device_data` and `ref_number` are validated.
 
 ### Request Example:
 
@@ -105,21 +97,21 @@ void sendSMS(String number, String body) async {
 
 ### **1. Initialization:**
 
--   The app sends the `encrypted_device_id` to the server (`init API`).
+-   The app sends the `encrypted_device_data` to the server (`init API`).
 -   The server responds with a `ref_number`.
 
 ### **2. Send SMS:**
 
--   The app opens the default SMS app, pre-filled with the `sms_body` and `sms_number`.
+-   The app opens the default SMS app, pre-filled with the `sms_body` and `sms_number`. or use SEND_SMS permission to send sms in background (android only)
 
 ### **3. Server Processing:**
 
--   The server receives the SMS sent to the long number.
--   Validates the  `encrypted_device_id` and updates the database status.
+-   The server receives the SMS sent to the long number through web hook.
+-   Validates the  `encrypted_device_data` and updates the database status.
 
 ### **4. Delay and Verify:**
 
--   After a 5-second delay, the app hits the `verify API` with the `ref_number`.
+-   After a 5 to 10-second delay, the app hits the `verify API` with the `ref_number`.
 -   The server checks the database and returns the updated status.
 
 ----------
@@ -128,14 +120,33 @@ void sendSMS(String number, String body) async {
 
 ```mermaid
 graph TD
-    A[App Sends Encrypted Device ID] -->|Init API| B[Server Generates ref_number]
+    A[App Sends Encrypted Device ID and sim details] -->|Init API| B[Server Generates ref_number]
     B --> C[App Receives ref_number]
     C --> D[App Opens Default SMS App to Send SMS or Background]
     D --> E[SMS Sent to Long Number]
-    E -->|Server Receives and Processes SMS| F[Validate encrypted_device_id]
+    E -->|Server Receives and Processes SMS| F[Validate encrypted_device_data]
     F --> G[Update Database Status]
-    G --> H[App Waits 5 Seconds]
+    G --> H[App Waits 5 to 10 Seconds]
     H -->|Verify API| I[Server Verifies using ref_number]
     I --> J[Return Updated Status]
 
 ```
+
+### **SIM Detection**
+
+#### **Android**
+You need to implement and check the following functions:
+- `hasActiveSim`: Checks if a SIM card is active.
+- `isAirplaneModeEnabled`: Checks if the device is in airplane mode.
+
+#### **iOS**
+You cannot directly check whether a SIM is available on iOS. Instead, you can use the following function to determine if the device is in airplane mode:
+
+```swift
+func isAirplaneModeEnabled() -> Bool? {  
+    let networkInfo = CTTelephonyNetworkInfo()  
+    guard let radioAccessTechnology = networkInfo.serviceCurrentRadioAccessTechnology else {  
+        return nil  
+    }  
+    return radioAccessTechnology.isEmpty  
+}
