@@ -132,6 +132,8 @@ graph TD
 
 ```
 
+
+
 ### **SIM Detection**
 
 #### **Android**
@@ -150,3 +152,7 @@ func isAirplaneModeEnabled() -> Bool? {
     }  
     return radioAccessTechnology.isEmpty  
 }
+```
+#### **SEND_SMS Permission**
+
+In the Play Console, select **Device Automation** as the core functionality when requesting SMS and Call Log permissions.
