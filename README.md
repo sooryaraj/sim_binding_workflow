@@ -1,8 +1,6 @@
 
 # SIM Binding Flow Documentation
 
-**Prepared By:** [Gowtham Sooryaraj](https://github.com/sooryaraj/) 
-
 ## **1. Initialization API**
 
 -   **Endpoint**: `simBinding/init`
@@ -14,7 +12,7 @@
 
 ```json
 {
-    "encrypted_device_id": "SAAFE STAGE-VERIFY h/ZIpg2redwTXpBP8EOb++hQMK3FizB+dPE0jTfnqfrO+LC+wp0wc0qy2oTW4AOj"
+    "encrypted_device_data": "SAAFE VERIFY h/ZIpg2redwTXpBP8EOb++hQMK3FizB+dPE0jTfnqfrO+LC+wp0wc0qy2oTW4AOj"
 }
 
 ```
@@ -156,3 +154,13 @@ func isAirplaneModeEnabled() -> Bool? {
 #### **SEND_SMS Permission**
 
 In the Play Console, select **Device Automation** as the core functionality when requesting SMS and Call Log permissions.
+
+### **Credits and Acknowledgements**
+
+This documentation is not only prepared but also conceptualized by Gowtham Sooryaraj. The ideology and implementation strategy for SIM binding were meticulously designed to address modern security and usability challenges.
+
+-   **[Saafe.in](https://app.saafe.in/):** For their support in realizing this concept.
+    
+-   **Ideation and Preparation:**  [Gowtham Sooryaraj](https://github.com/sooryaraj)
+
+![Saafe Account Aggregator](https://app.saafe.in/static/media/saafe_light.a6365baa.png)
