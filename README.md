@@ -157,9 +157,15 @@ In the Play Console, select **Device Automation** as the core functionality when
 
 >In **Google Play Console**, select your app and navigate to ```Monitor and Improvement → Policy and Programs → App Content```. Locate SMS and Call Log permissions and click **Manage**. This will redirect you to the SMS and Call Log permissions page, where you need to select **Device Automation**.
 
+**Description**
+>We have implemented SIM binding in our application to provide an additional layer of security. As part of the Android implementation, the app sends a verification SMS to a long number provider in the background, which requires the use of the SEND_SMS permission.
+
 <img width="275" alt="screenshot_1" src="https://github.com/user-attachments/assets/667e63a4-e1cc-476d-b706-5b45d6b83e91" />
 <img width="936" alt="screenshot_2" src="https://github.com/user-attachments/assets/b78e78b1-5b9d-4475-ae24-fce707a0c63c" />
 
+
+**Note**
+The application was still rejected even after selecting Device Automation. First, remove the SEND_SMS permission (used for the SIM Binding feature) and upload the build to the Play Store for approval. Once approved, resubmit the application with the SEND_SMS permission.
 
 ### **Credits and Acknowledgements**
 
