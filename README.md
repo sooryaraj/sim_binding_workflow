@@ -155,6 +155,12 @@ func isAirplaneModeEnabled() -> Bool? {
 
 In the Play Console, select **Device Automation** as the core functionality when requesting SMS and Call Log permissions.
 
+>In **Google Play Console**, select your app and navigate to ```Monitor and Improvement → Policy and Programs → App Content```. Locate SMS and Call Log permissions and click **Manage**. This will redirect you to the SMS and Call Log permissions page, where you need to select **Device Automation**.
+
+<img width="275" alt="screenshot_1" src="https://github.com/user-attachments/assets/667e63a4-e1cc-476d-b706-5b45d6b83e91" />
+<img width="936" alt="screenshot_2" src="https://github.com/user-attachments/assets/b78e78b1-5b9d-4475-ae24-fce707a0c63c" />
+
+
 ### **Credits and Acknowledgements**
 
 This documentation is not only prepared but also conceptualized by Gowtham Sooryaraj. The ideology and implementation strategy for SIM binding were meticulously designed to address modern security and usability challenges.
